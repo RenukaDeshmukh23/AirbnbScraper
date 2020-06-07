@@ -1,0 +1,150 @@
+import csv
+import parameters
+import selenium
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+from time import sleep
+from parsel import Selector
+
+writer = csv.writer(open("H://Bir.csv", 'w',encoding="utf-8"))
+writer.writerow(['Name','Url','Location','Price','Description'])
+
+driver=webdriver.Chrome('F:\\chromedriver')
+driver.maximize_window()
+sleep(2)
+
+driver.get('https:\\www.airbnb.co.in')
+sleep(2)
+
+search_city = driver.find_element_by_xpath('//*[@class="_1f8ev6q"]').send_keys('Bir,Himachal pradesh \ue007')
+sleep(3)
+search_button=driver.find_element_by_xpath('//*[@type="submit"]').click()
+sleep(2)
+
+#stays= driver.find_element_by_xpath('//*[@class="_1dilvt2s"] | //a[text()="Stays"]').click()
+#sleep(5)
+cookies=driver.find_element_by_xpath('//*[@class="optanon-allow-all accept-cookies-button"]').click()
+sleep(2)
+
+#filters=driver.find_element_by_xpath('//*[@id="menuItemButton-dynamicMoreFilters"]').click()
+#sleep(2)
+#superhost=driver.find_element_by_xpath('//*[@id="filterItem-switch-superh9ost-true"]').click()
+#sleep(2)
+
+map=driver.find_element_by_xpath('//*[@class="_1i2wkdr"]').click()
+#sleep(3)
+#filters=driver.find_element_by_xpath('//*[@id="menuItemButton-dynamicMoreFilters"]').click()
+#sleep(2)
+#superhost=driver.find_element_by_xpath('//*[@id="filterItem-switch-superhost-true"]').click()
+#sleep(2)9
+#show_places=driver.find_element_by_xpath('//*[@class="_2i58o3a"]').click()
+sleep(10)
+
+home=driver.current_url
+print(home)
+for i in r9ange(1,300):
+    find_places=driver.find_elements_by_xpath('//*[@class="_1wz0grtk"]/a|'
+                            '//*[@class="_1oajdzlk"]/a')                              #get the url for the place
+    find_places=[place.get_attribute('href') for place in find_places]
+    for place in find_places:
+        driver.get(place)                                                                        #oprn in tab
+        sleep(7)
+
+        sel = Selector(text=driver.page_source)
+        Name=sel.xpath('//*[@itemprop="name"]//h1//text() |'
+                            '//h1//text()[1]').extract()                        #extract name of location
+        Url=driver.current_url
+        Location=sel.xpath('//*[@class="_1hpgssa1"]//a//text() |'
+                        '//*[@class="_ylytgbo"]//text()').extract()             #get the url of the page
+        Price=sel.xpath('//span//*[@class="_doc79r"]//text()').extract()  #get the price '//span//*[@class="_n4om66"]//text() |''//*[@class="_18ilrswp"]//text()'
+        Translate=sel.xpath('//*[@class="_1p3joamp"]//button[text="Translate"]')
+        if Translate:
+            Translate.click()
+            Description=sel.xpath('//*[@class="_6z3til"]//text() | '
+                        '//*[@class="_11oyobo"]//text()').extract()
+        else:
+            Description=sel.xpath('//*[@class="_6z3til"]//text() | '
+                        '//*[@class="_11oyobo"]//text()').extract()
+
+        print(Name)                                                             #print the variables
+        print(Url)
+        print(Location)
+        print(Price)
+        print(Description)
+
+        writer.writerow([Name,Url,Location,Price,Description])
+
+driver.get(home)
+while True:
+        try:
+            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            sleep(2)
+            driver.refresh()
+            next_page=driver.find_element_by_xpath('//*[@class="_cfiftp"]//a[@aria-label="Next page"]')
+            next_page.click()
+            sleep(5)
+            print("----------------------------------------------------------------------------------")
+            #filters=driver.find_element_by_xpath('//*[@id="menuItemButton-dynamicMoreFilters"]').click()
+            #sleep(2)
+            #superhost=driver.find_element_by_xpath('//*[@id="filterItem-switch-superhost-true"]')
+            #sleep(2)
+            #show_places=driver.find_element_by_xpath('//*[@class="_2i58o3a"]').click()
+            #sleep(2)
+            #if superhost:
+                #check=driver.find_element_by_xpath('//*[@aria-checked="true"]')
+
+            #show_places=driver.find_element_by_xpath('//*[@class="_2i58o3a"]').click()
+            #sleep(5)
+            #else:
+                #superhost.click()
+                #show_places=driver.find_element_by_xpath('//*[@class="_2i58o3a"]').click()
+                #sleep(5)
+            next_page_url=driver.current_url
+            #driver.get(next_page_url)
+            print(next_page_url)
+            for i in range(1,300):
+                find_places=driver.find_elements_by_xpath('//*[@class="_1wz0grtk"]/a|'
+                                            '//*[@class="_1oajdzlk"]/a')                              #get the url for the place
+                find_places=[place.get_attribute('href') for place in find_places]
+                for place in find_places:
+                    driver.get(place)                                                                                                  #oprn in tab
+                    sleep(7)
+
+                    sel = Selector(text=driver.page_source)
+                    Name=sel.xpath('//*[@itemprop="name"]//h1//text() |'
+                                            '//h1//text()[1]').extract()                        #extract name of location
+                    Url=driver.current_url
+                    Location=sel.xpath('//*[@class="_1hpgssa1"]//a//text() |'
+                                        '//*[@class="_ylytgbo"]//text()').extract()             #get the url of the page
+                    Price=sel.xpath('//span//*[@class="_doc79r"]//text()').extract()    #get the price '//span//*[@class="_n4om66"]//text() |''//*[@class="_18ilrswp"]//text()'
+                    Translate=sel.xpath('//*[@class="_1p3joamp"]//button[text="Translate"]')
+                    if Translate:
+                        Translate.click()
+                        Description=sel.xpath('//*[@class="_6z3til"]//text() | '
+                                        '//*[@class="_11oyobo"]//text()').extract()
+                    else:
+                        Description=sel.xpath('//*[@class="_6z3til"]//text() | '
+                                        '//*[@class="_11oyobo"]//text()').extract()
+
+                    print(Name)                                                             #print the variables
+                    print(Url)
+                    print(Location)
+                    print(Price)
+                    print(Description)
+                    writer.writerow([Name,Url,Location,Price,Description])
+
+            driver.get(next_page_url)
+
+        except:
+            print('No more pages to load.')
+            sleep(5)
+            driver.close()
+            break
+
+
+
+
+
+
+
+    #
